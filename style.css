@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&display=swap');
 
 /*
- * DW2 · Persona Atelier | v1.0.1
+ * DW2 · Persona Atelier | v1.0.2
  * Read-only visual layer for TT's native Persona Management.
  * This stylesheet does not target Character Gallery or Story Archive.
  *
@@ -796,10 +796,10 @@ body.dw2pa-active #PersonaManagement #dw2pa-tools-toggle[aria-expanded="true"] {
 }
 body.dw2pa-active #PersonaManagement #dw2pa-tools-tray {
     display: grid !important;
-    grid-template-columns: repeat(auto-fit, minmax(82px, 1fr));
-    gap: 7px;
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    gap: 5px;
     margin: 1px 0 12px;
-    padding: 10px;
+    padding: 8px;
     border: 1px solid var(--dw2pa-stroke);
     border-radius: 7px;
     background: rgba(22, 27, 33, .24);
@@ -811,9 +811,10 @@ body.dw2pa-active #PersonaManagement .dw2pa-tool-item {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 5px;
+    flex-direction: column;
+    gap: 2px;
     min-width: 0;
-    min-height: 33px;
+    min-height: 50px;
     border: 1px solid rgba(237, 228, 225, .11);
     border-radius: 5px;
     background: rgba(255,255,255,.025);
@@ -823,12 +824,13 @@ body.dw2pa-active #PersonaManagement .dw2pa-tool-item > :is(
 ) {
     display: inline-flex !important;
     flex: 0 1 auto !important;
+    flex-direction: column !important;
     align-items: center;
     justify-content: center;
-    gap: 5px;
-    min-height: 30px !important;
+    gap: 3px;
+    min-height: 45px !important;
     height: auto !important;
-    width: auto !important;
+    width: 100% !important;
     max-width: 100%;
     min-width: 0 !important;
     margin: 0 !important;
@@ -838,7 +840,7 @@ body.dw2pa-active #PersonaManagement .dw2pa-tool-item > :is(
     background: transparent !important;
     box-shadow: none !important;
     color: var(--dw2pa-subtle) !important;
-    font: 500 11px/1.4 var(--dw2pa-font) !important;
+    font: 500 9px/1.3 var(--dw2pa-font) !important;
     white-space: nowrap;
 }
 body.dw2pa-active #PersonaManagement .dw2pa-tool-item > .fa-solid {
@@ -916,6 +918,95 @@ body.dw2pa-active #PersonaManagement #user_avatar_block.gridView >
         font-size: 8px !important;
     }
     body.dw2pa-active #PersonaManagement #dw2pa-tools-tray {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+        gap: 3px;
+        padding: 7px;
     }
+}
+
+/* v1.0.2 · Compact tools + TT native paging + optional global settings. */
+body.dw2pa-active #PersonaManagement #dw2pa-tools-tray .dw2pa-pager-row {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    padding: 5px 3px 0;
+    border-top: 1px solid var(--dw2pa-stroke);
+}
+body.dw2pa-active #PersonaManagement #dw2pa-tools-tray
+    .dw2pa-pager-row #persona_pagination_container {
+    flex: 1 1 auto !important;
+    order: initial !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 100% !important;
+    min-width: 0;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+body.dw2pa-active #PersonaManagement #dw2pa-tools-tray
+    #persona_pagination_container .paginationjs-nav {
+    display: none !important;
+}
+/* TT uses Font Awesome on this original i element: do not replace it with
+   Noto Serif SC, or the grid icon becomes an empty X/square on iOS. */
+body.dw2pa-active #PersonaManagement #dw2pa-tools-tray #persona_grid_toggle,
+body.dw2pa-active #PersonaManagement #dw2pa-tools-tray #persona_grid_toggle::before {
+    font-family: 'Font Awesome 6 Free' !important;
+    font-weight: 900 !important;
+    font-style: normal !important;
+}
+body.dw2pa-active #PersonaManagement #dw2pa-tools-tray #persona_grid_toggle {
+    min-height: 20px !important;
+    height: 20px !important;
+    width: 100% !important;
+    padding: 0 !important;
+    font-size: 14px !important;
+}
+body.dw2pa-active #PersonaManagement #dw2pa-tools-tray .dw2pa-tool-item
+    .dw2pa-tool-caption {
+    font: 500 9px/1.4 var(--dw2pa-font);
+    text-align: center;
+}
+/* Collapse only the visual content; keep the three native global checkboxes,
+   their event handlers and stored values completely untouched. */
+body.dw2pa-active #PersonaManagement .persona_management_global_settings > h4.standoutHeader {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 0 !important;
+}
+body.dw2pa-active #PersonaManagement .persona_management_global_settings
+    > h4.standoutHeader #dw2pa-global-toggle {
+    flex: 0 0 auto;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    min-height: 31px;
+    margin: 0 !important;
+    padding: 4px 10px !important;
+    border: 1px solid var(--dw2pa-stroke) !important;
+    border-radius: 5px !important;
+    background: transparent !important;
+    color: var(--dw2pa-subtle) !important;
+    box-shadow: none !important;
+    font: 500 10px/1.4 var(--dw2pa-font) !important;
+    cursor: pointer;
+}
+body.dw2pa-active #PersonaManagement .persona_management_global_settings
+    > h4.standoutHeader #dw2pa-global-toggle::after {
+    content: '⌄';
+    margin-left: 6px;
+    font: 13px/1 sans-serif;
+}
+body.dw2pa-active #PersonaManagement .persona_management_global_settings
+    > h4.standoutHeader #dw2pa-global-toggle[aria-expanded="true"]::after {
+    transform: rotate(180deg);
+}
+body.dw2pa-active #PersonaManagement .persona_management_global_settings.dw2pa-global-collapsed
+    > :not(h4.standoutHeader) {
+    display: none !important;
 }

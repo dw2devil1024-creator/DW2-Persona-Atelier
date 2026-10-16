@@ -1,9 +1,9 @@
 /*
- * DW2 · Persona Atelier | v1.0.1
+ * DW2 · Persona Atelier | v1.0.2
  * A presentation layer for TT's native Persona Management.
  * Keep every TT persona node, event handler, filter and save routine intact.
  */
-const VERSION = '1.0.1';
+const VERSION = '1.0.2';
 const STYLE_CLASS = 'dw2pa-active';
 const SETTINGS_ID = 'dw2pa-settings';
 const SETTINGS_TOGGLE_ID = 'dw2pa-settings-toggle';
@@ -33,6 +33,8 @@ const ACTIONS_TOGGLE_ID = 'dw2pa-actions-toggle';
 const ACTIONS_CONTENT_ID = 'dw2pa-persona-actions';
 const TOOL_OPEN_KEY = 'dw2pa:tools:open:v1';
 const ACTION_OPEN_KEY = 'dw2pa:actions:open:v1';
+const GLOBAL_OPEN_KEY = 'dw2pa:global:open:v1';
+const GLOBAL_TOGGLE_ID = 'dw2pa-global-toggle';
 let movedTools = [];
 let namedNativeButtons = false;
 
@@ -89,7 +91,8 @@ function mountToolTray() {
         document.getElementById('create_dummy_persona'),
         document.getElementById('persona_grid_toggle'),
     ];
-    if (!row || tools.some(node => !node)) return false;
+    const nativePager = document.getElementById('persona_pagination_container');
+    if (!row || !nativePager || tools.some(node => !node)) return false;
 
     const toggle = document.createElement('button');
     toggle.id = TOOLS_TOGGLE_ID;
@@ -128,6 +131,17 @@ function mountToolTray() {
         }
         tray.append(item);
     }
+
+    // Put TT's *real* pagination host on a dedicated second row. The
+    // pagination.js instance and all handlers remain owned by TT.
+    const pageAnchor = document.createComment('dw2pa original pager position');
+    nativePager.before(pageAnchor);
+    movedTools.push({ node: nativePager, anchor: pageAnchor, parent: pageAnchor.parentNode });
+    const pagerRow = document.createElement('div');
+    pagerRow.className = 'dw2pa-pager-row';
+    pagerRow.append(nativePager);
+    tray.append(pagerRow);
+
     openToolTray(getOpen(TOOL_OPEN_KEY));
     return true;
 }
@@ -180,14 +194,47 @@ function restorePersonaActions() {
         namedNativeButtons = false;
     }
 }
+function openGlobalSettings(open) {
+    const section = document.querySelector('#PersonaManagement .persona_management_global_settings');
+    const toggle = document.getElementById(GLOBAL_TOGGLE_ID);
+    if (!section || !toggle) return;
+    section.classList.toggle('dw2pa-global-collapsed', !open);
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.textContent = open ? '收起' : '展开';
+}
+function mountGlobalSettings() {
+    if (document.getElementById(GLOBAL_TOGGLE_ID)) return true;
+    const section = document.querySelector('#PersonaManagement .persona_management_global_settings');
+    const title = section?.querySelector(':scope > h4.standoutHeader');
+    if (!title) return false;
+    const toggle = document.createElement('button');
+    toggle.type = 'button';
+    toggle.id = GLOBAL_TOGGLE_ID;
+    toggle.setAttribute('aria-label', '展开或收起全局设置');
+    toggle.addEventListener('click', () => {
+        const next = toggle.getAttribute('aria-expanded') !== 'true';
+        saveOpen(GLOBAL_OPEN_KEY, next);
+        openGlobalSettings(next);
+    });
+    title.append(toggle);
+    openGlobalSettings(getOpen(GLOBAL_OPEN_KEY));
+    return true;
+}
+function restoreGlobalSettings() {
+    document.querySelector('#PersonaManagement .persona_management_global_settings')
+        ?.classList.remove('dw2pa-global-collapsed');
+    document.getElementById(GLOBAL_TOGGLE_ID)?.remove();
+}
 function applyStyle(enabled) {
     const active = Boolean(running && enabled);
     if (active) {
         mountToolTray();
         mountPersonaActions();
+        mountGlobalSettings();
     } else {
         restoreToolTray();
         restorePersonaActions();
+        restoreGlobalSettings();
     }
     document.body?.classList.toggle(STYLE_CLASS, active);
     syncToggle();
