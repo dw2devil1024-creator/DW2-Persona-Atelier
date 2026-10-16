@@ -119,9 +119,9 @@ function updateButtons(content) {
         message.textContent = '正在通过 TT 检查 Git 仓库…';
         try {
             const install = await locateInstall();
-            if (install.info.isUpToDate === true && install.info.currentBranchName === 'main') {
+            if (install.info.isUpToDate === true) {
                 message.textContent = '已是最新版（v' + VERSION + '）。';
-            } else if (install.info.isUpToDate === false || install.info.currentBranchName !== 'main') {
+            } else if (install.info.isUpToDate === false) {
                 checkedUpdate = { folder: install.folder, global: install.global };
                 message.textContent = '检测到仓库更新，可以选择手动安装。';
             } else {
