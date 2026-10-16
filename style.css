@@ -1,7 +1,7 @@
 /* Avoid external font loading during TT startup. Reuse the theme's font or system serif fallback. */
 
 /*
- * DW2 · Persona Atelier | v1.0.6
+ * DW2 · Persona Atelier | v1.0.7
  * Read-only visual layer for TT's native Persona Management.
  * This stylesheet does not target Character Gallery or Story Archive.
  *
@@ -649,7 +649,19 @@ body.dw2pa-active #PersonaManagement .persona_management_global_settings .range-
     gap: 2px;
     min-width: 0;
     color: var(--dw2pa-ext-ink);
-    font: 600 14px/1.45 'Noto Serif SC', serif;
+    font-family: 'Noto Serif SC', 'Songti SC', 'STSong', serif !important;
+    font-size: inherit !important;
+    font-weight: 400 !important;
+    line-height: inherit !important;
+    letter-spacing: normal !important;
+}
+#dw2pa-settings .dw2pa-settings-title > b {
+    display: block;
+    font-family: inherit !important;
+    font-size: inherit !important;
+    font-weight: 600 !important;
+    line-height: 1.45 !important;
+    letter-spacing: normal !important;
 }
 #dw2pa-settings .dw2pa-settings-title span {
     color: var(--dw2pa-ext-muted);
@@ -685,19 +697,22 @@ body.dw2pa-active #PersonaManagement .persona_management_global_settings .range-
     display: none;
 }
 #dw2pa-settings .dw2pa-settings-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 10px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+    width: 100%;
+    margin: 10px 0 6px;
 }
 #dw2pa-settings .dw2pa-settings-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: auto;
-    min-height: 34px;
+    box-sizing: border-box;
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 36px;
     margin: 0 !important;
-    padding: 7px 12px !important;
+    padding: 7px 3px !important;
     border: 1px solid var(--dw2pa-ext-border) !important;
     border-radius: 6px !important;
     color: var(--dw2pa-ext-ink) !important;
@@ -705,10 +720,15 @@ body.dw2pa-active #PersonaManagement .persona_management_global_settings .range-
     box-shadow: none !important;
     text-shadow: none !important;
     font: 500 11px/1.4 'Noto Serif SC', serif !important;
+    text-align: center;
+    white-space: nowrap;
     cursor: pointer;
 }
 #dw2pa-settings .dw2pa-open-native {
-    margin: 2px 0 6px !important;
+    margin: 0 !important;
+}
+#dw2pa-settings .dw2pa-settings-reload {
+    grid-column: 1 / -1;
 }
 #dw2pa-settings .dw2pa-settings-btn:hover,
 #dw2pa-settings .dw2pa-settings-btn:focus-visible {

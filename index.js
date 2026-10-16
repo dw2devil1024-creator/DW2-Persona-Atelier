@@ -3,7 +3,7 @@
  * A presentation layer for TT's native Persona Management.
  * Keep every TT persona node, event handler, filter and save routine intact.
  */
-const VERSION = '1.0.6';
+const VERSION = '1.0.7';
 const STYLE_CLASS = 'dw2pa-active';
 const SETTINGS_ID = 'dw2pa-settings';
 const SETTINGS_TOGGLE_ID = 'dw2pa-settings-toggle';
@@ -389,7 +389,7 @@ async function locateInstall() {
     return { folder, global, info };
 }
 
-function updateButtons(content) {
+function updateButtons(content, openButton) {
     const group = document.createElement('div');
     group.className = 'dw2pa-settings-actions';
     const check = document.createElement('button');
@@ -402,7 +402,7 @@ function updateButtons(content) {
     update.disabled = true;
     update.textContent = '更新到最新版';
     const reload = document.createElement('button');
-    reload.className = 'dw2pa-settings-btn';
+    reload.className = 'dw2pa-settings-btn dw2pa-settings-reload';
     reload.type = 'button';
     reload.textContent = '刷新酒馆';
     reload.hidden = true;
@@ -462,7 +462,7 @@ function updateButtons(content) {
     });
 
     reload.addEventListener('click', () => window.location.reload());
-    group.append(check, update, reload);
+    group.append(openButton, check, update, reload);
     content.append(group, message);
 }
 
@@ -536,9 +536,9 @@ function mountSettings() {
     openStatus.setAttribute('role', 'status');
     open.addEventListener('click', () => openPersonaManagement(openStatus));
 
-    content.append(note, option, open, openStatus);
-    updateButtons(content);
-    content.append(tip);
+    content.append(note, option);
+    updateButtons(content, open);
+    content.append(openStatus, tip);
     drawer.append(heading, content);
     panel.append(drawer);
     host.append(panel);
