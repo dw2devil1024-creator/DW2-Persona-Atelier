@@ -550,8 +550,8 @@ body.dw2pa-active #PersonaManagement #persona-management-dropdown {
 body.dw2pa-active #PersonaManagement #persona_description {
     display: block;
     width: 100% !important;
-    height: 310px !important;
-    min-height: 310px !important;
+    height: 395px;
+    min-height: 395px !important;
     max-height: none !important;
     padding: 13px 12px !important;
     margin: 0 !important;
@@ -1087,7 +1087,7 @@ body.dw2pa-active #PersonaManagement #persona_controls:not(.dw2pa-actions-collap
    original default/character/chat controls in a vertical stack at right. */
 body.dw2pa-active #PersonaManagement #dw2pa-connections-layout {
     display: grid !important;
-    grid-template-columns: minmax(84px, 112px) minmax(0, 1fr);
+    grid-template-columns: minmax(116px, 142px) minmax(0, 1fr);
     grid-template-areas:
         'avatars controls'
         'status status';
@@ -1105,8 +1105,8 @@ body.dw2pa-active #PersonaManagement #dw2pa-connections-layout #persona_connecti
     align-content: start;
     justify-content: flex-start;
     min-width: 0 !important;
-    max-width: 112px;
-    min-height: 86px;
+    max-width: 142px;
+    min-height: 154px;
     margin: 0 !important;
     padding: 0 !important;
     gap: 5px;
@@ -1119,8 +1119,8 @@ body.dw2pa-active #PersonaManagement #dw2pa-connections-layout #persona_connecti
     border-radius: 5px;
 }
 body.dw2pa-active #PersonaManagement #dw2pa-connections-layout #persona_connections_list img {
-    width: 96px !important;
-    height: 122px !important;
+    width: 126px !important;
+    height: 158px !important;
     object-fit: cover !important;
     object-position: center;
 }
@@ -1166,12 +1166,114 @@ body.dw2pa-active #PersonaManagement #dw2pa-connections-layout
 }
 @media (max-width: 380px) {
     body.dw2pa-active #PersonaManagement #dw2pa-connections-layout {
-        grid-template-columns: minmax(72px, 98px) minmax(0, 1fr);
+        grid-template-columns: minmax(104px, 118px) minmax(0, 1fr);
         column-gap: 9px;
     }
     body.dw2pa-active #PersonaManagement #dw2pa-connections-layout
         #persona_connections_list img {
-        width: 86px !important;
-        height: 110px !important;
+        width: 104px !important;
+        height: 132px !important;
+    }
+}
+
+
+/* v1.0.4 · A quiet folding desk for the current Persona's insertion settings.
+   Keep the live TT token counter visible in its original header. */
+body.dw2pa-active #PersonaManagement #dw2pa-insert-settings {
+    min-width: 0;
+    margin: 15px 0 9px;
+    padding: 6px 0 0;
+    border-top: 1px solid var(--dw2pa-stroke);
+}
+body.dw2pa-active #PersonaManagement #dw2pa-insert-settings > .flex-container {
+    display: flex !important;
+    flex-wrap: wrap;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 5px 8px;
+    margin: 0 !important;
+    padding: 5px 0 3px !important;
+    min-width: 0;
+}
+body.dw2pa-active #PersonaManagement #dw2pa-insert-settings > .flex-container > h4 {
+    flex: 1 0 auto;
+    width: auto;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: none !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    color: var(--dw2pa-text) !important;
+    font: 500 12px/1.5 var(--dw2pa-font) !important;
+}
+body.dw2pa-active #PersonaManagement #dw2pa-insert-settings
+    > .flex-container > .extension_token_counter {
+    flex: 0 1 auto;
+    max-width: 100%;
+    order: 1;
+    margin: 0 !important;
+    color: var(--dw2pa-subtle) !important;
+    white-space: nowrap;
+    font: 400 10px/1.4 var(--dw2pa-font) !important;
+}
+body.dw2pa-active #PersonaManagement #dw2pa-insert-settings #dw2pa-insert-toggle {
+    order: 2;
+    flex: 0 0 auto;
+    min-height: 30px;
+    margin: 0 !important;
+    padding: 5px 10px !important;
+    border: 1px solid var(--dw2pa-stroke) !important;
+    border-radius: 5px !important;
+    background: transparent !important;
+    color: var(--dw2pa-subtle) !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    cursor: pointer;
+    font: 500 10px/1.4 var(--dw2pa-font) !important;
+}
+body.dw2pa-active #PersonaManagement #dw2pa-insert-settings #dw2pa-insert-toggle:hover {
+    border-color: var(--dw2pa-stroke-strong) !important;
+    color: var(--dw2pa-text) !important;
+}
+body.dw2pa-active #PersonaManagement #dw2pa-insert-settings.dw2pa-insert-collapsed
+    > .persona_management_description_position_container {
+    display: none !important;
+}
+body.dw2pa-active #PersonaManagement #dw2pa-insert-settings:not(.dw2pa-insert-collapsed)
+    > .persona_management_description_position_container {
+    margin: 9px 0 6px;
+    padding: 0 0 5px;
+}
+
+/* Match the physical avatar holder to the larger photograph; TT's native
+   avatar class has a smaller fixed base size which otherwise clips it. */
+body.dw2pa-active #PersonaManagement #dw2pa-connections-layout
+    #persona_connections_list .avatar {
+    box-sizing: border-box;
+    width: 126px !important;
+    height: 158px !important;
+    flex: 0 0 126px !important;
+    margin: 0 !important;
+    overflow: hidden;
+    border-radius: 5px !important;
+}
+body.dw2pa-active #PersonaManagement #dw2pa-connections-layout
+    #persona_connections_list .avatar img {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+    border-radius: inherit !important;
+}
+@media (max-width: 380px) {
+    body.dw2pa-active #PersonaManagement #dw2pa-connections-layout
+        #persona_connections_list .avatar {
+        width: 104px !important;
+        height: 132px !important;
+        flex-basis: 104px !important;
+    }
+    body.dw2pa-active #PersonaManagement #dw2pa-insert-settings
+        > .flex-container > .extension_token_counter {
+        font-size: 9px !important;
     }
 }

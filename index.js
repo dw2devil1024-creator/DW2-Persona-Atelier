@@ -3,7 +3,7 @@
  * A presentation layer for TT's native Persona Management.
  * Keep every TT persona node, event handler, filter and save routine intact.
  */
-const VERSION = '1.0.3';
+const VERSION = '1.0.4';
 const STYLE_CLASS = 'dw2pa-active';
 const SETTINGS_ID = 'dw2pa-settings';
 const SETTINGS_TOGGLE_ID = 'dw2pa-settings-toggle';
@@ -36,7 +36,13 @@ const ACTION_OPEN_KEY = 'dw2pa:actions:open:v1';
 const GLOBAL_OPEN_KEY = 'dw2pa:global:open:v1';
 const GLOBAL_TOGGLE_ID = 'dw2pa-global-toggle';
 const CONNECTION_LAYOUT_ID = 'dw2pa-connections-layout';
+const INSERT_SECTION_ID = 'dw2pa-insert-settings';
+const INSERT_TOGGLE_ID = 'dw2pa-insert-toggle';
+const INSERT_CONTENT_ID = 'dw2pa-insert-content';
+const INSERT_OPEN_KEY = 'dw2pa:insert:open:v1';
 let movedConnections = [];
+let movedInsertion = [];
+let insertedContentId = false;
 let movedTools = [];
 let namedNativeButtons = false;
 
@@ -225,6 +231,64 @@ function restoreConnectionLayout() {
     movedConnections = [];
     document.getElementById(CONNECTION_LAYOUT_ID)?.remove();
 }
+/* Insertion position belongs to the current Persona, not TT global settings.
+   The existing Position header includes a live native token counter.
+   Preserve both original nodes and all change listeners with comment anchors. */
+function openInsertSettings(open) {
+    const section = document.getElementById(INSERT_SECTION_ID);
+    const toggle = document.getElementById(INSERT_TOGGLE_ID);
+    if (!section || !toggle) return;
+    section.classList.toggle('dw2pa-insert-collapsed', !open);
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.textContent = open ? '收起' : '展开';
+}
+function mountInsertSettings() {
+    if (document.getElementById(INSERT_SECTION_ID)) return true;
+    const content = document.querySelector('#PersonaManagement .persona_management_description_position_container');
+    const header = content?.previousElementSibling;
+    if (!content || !header || header.tagName !== 'DIV'
+        || !header.querySelector('h4') || header.parentNode !== content.parentNode) return false;
+
+    const section = document.createElement('section');
+    section.id = INSERT_SECTION_ID;
+    header.before(section);
+    for (const node of [header, content]) {
+        const anchor = document.createComment('dw2pa original insertion position');
+        node.before(anchor);
+        movedInsertion.push({ node, anchor, parent: anchor.parentNode });
+        section.append(node);
+    }
+    if (!content.id) {
+        content.id = INSERT_CONTENT_ID;
+        insertedContentId = true;
+    }
+    const toggle = document.createElement('button');
+    toggle.id = INSERT_TOGGLE_ID;
+    toggle.type = 'button';
+    toggle.setAttribute('aria-label', '展开或收起人设插入位置');
+    toggle.setAttribute('aria-controls', content.id);
+    toggle.addEventListener('click', () => {
+        const next = toggle.getAttribute('aria-expanded') !== 'true';
+        saveOpen(INSERT_OPEN_KEY, next);
+        openInsertSettings(next);
+    });
+    header.append(toggle);
+    openInsertSettings(getOpen(INSERT_OPEN_KEY));
+    return true;
+}
+function restoreInsertSettings() {
+    document.getElementById(INSERT_TOGGLE_ID)?.remove();
+    if (insertedContentId) {
+        document.getElementById(INSERT_CONTENT_ID)?.removeAttribute('id');
+        insertedContentId = false;
+    }
+    for (const { node, anchor, parent } of movedInsertion) {
+        if (anchor.parentNode) anchor.replaceWith(node);
+        else if (parent?.isConnected) parent.append(node);
+    }
+    movedInsertion = [];
+    document.getElementById(INSERT_SECTION_ID)?.remove();
+}
 function openGlobalSettings(open) {
     const section = document.querySelector('#PersonaManagement .persona_management_global_settings');
     const toggle = document.getElementById(GLOBAL_TOGGLE_ID);
@@ -263,11 +327,13 @@ function applyStyle(enabled) {
         mountPersonaActions();
         mountGlobalSettings();
         mountConnectionLayout();
+        mountInsertSettings();
     } else {
         restoreToolTray();
         restorePersonaActions();
         restoreGlobalSettings();
         restoreConnectionLayout();
+        restoreInsertSettings();
     }
     document.body?.classList.toggle(STYLE_CLASS, active);
     syncToggle();
