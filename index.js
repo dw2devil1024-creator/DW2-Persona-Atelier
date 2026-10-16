@@ -3,7 +3,7 @@
  * A presentation layer for TT's native Persona Management.
  * Keep every TT persona node, event handler, filter and save routine intact.
  */
-const VERSION = '1.0.4';
+const VERSION = '1.0.5';
 const STYLE_CLASS = 'dw2pa-active';
 const SETTINGS_ID = 'dw2pa-settings';
 const SETTINGS_TOGGLE_ID = 'dw2pa-settings-toggle';

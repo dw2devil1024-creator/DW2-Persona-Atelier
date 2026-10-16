@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&display=swap');
 
 /*
- * DW2 · Persona Atelier | v1.0.3
+ * DW2 · Persona Atelier | v1.0.5
  * Read-only visual layer for TT's native Persona Management.
  * This stylesheet does not target Character Gallery or Story Archive.
  *
@@ -458,10 +458,18 @@ body.dw2pa-active #PersonaManagement .persona_management_global_settings {
     min-width: 0;
     margin: 0 0 11px !important;
     padding: 13px 12px 15px !important;
+    box-shadow: none !important;
+}
+body.dw2pa-active #PersonaManagement .persona_management_current_persona {
+    /* Let the TT theme show through. The actual textarea stays readable. */
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+}
+body.dw2pa-active #PersonaManagement .persona_management_global_settings {
     border: 1px solid var(--dw2pa-stroke) !important;
     border-radius: 8px !important;
     background: var(--dw2pa-panel) !important;
-    box-shadow: none !important;
 }
 body.dw2pa-active #PersonaManagement .persona_management_current_persona > h4.standoutHeader,
 body.dw2pa-active #PersonaManagement .persona_management_global_settings > h4.standoutHeader {
@@ -1087,13 +1095,13 @@ body.dw2pa-active #PersonaManagement #persona_controls:not(.dw2pa-actions-collap
    original default/character/chat controls in a vertical stack at right. */
 body.dw2pa-active #PersonaManagement #dw2pa-connections-layout {
     display: grid !important;
-    grid-template-columns: minmax(116px, 142px) minmax(0, 1fr);
+    grid-template-columns: minmax(112px, 126px) minmax(0, 1fr);
     grid-template-areas:
         'avatars controls'
         'status status';
     column-gap: 12px;
     row-gap: 10px;
-    align-items: start;
+    align-items: center;
     margin: 3px 0 5px;
     padding: 9px 0;
     min-width: 0;
@@ -1102,13 +1110,14 @@ body.dw2pa-active #PersonaManagement #dw2pa-connections-layout #persona_connecti
     grid-area: avatars;
     display: flex !important;
     flex-flow: row wrap !important;
-    align-content: start;
+    align-content: center;
     justify-content: flex-start;
+    align-self: center;
     min-width: 0 !important;
-    max-width: 142px;
-    min-height: 154px;
+    max-width: 126px;
+    min-height: 0 !important;
     margin: 0 !important;
-    padding: 0 !important;
+    padding: 0 0 0 8px !important;
     gap: 5px;
     overflow-wrap: anywhere;
     font: 10px/1.55 var(--dw2pa-font);
@@ -1119,8 +1128,8 @@ body.dw2pa-active #PersonaManagement #dw2pa-connections-layout #persona_connecti
     border-radius: 5px;
 }
 body.dw2pa-active #PersonaManagement #dw2pa-connections-layout #persona_connections_list img {
-    width: 126px !important;
-    height: 158px !important;
+    width: 106px !important;
+    height: 120px !important;
     object-fit: cover !important;
     object-position: center;
 }
@@ -1166,13 +1175,13 @@ body.dw2pa-active #PersonaManagement #dw2pa-connections-layout
 }
 @media (max-width: 380px) {
     body.dw2pa-active #PersonaManagement #dw2pa-connections-layout {
-        grid-template-columns: minmax(104px, 118px) minmax(0, 1fr);
+        grid-template-columns: minmax(102px, 116px) minmax(0, 1fr);
         column-gap: 9px;
     }
     body.dw2pa-active #PersonaManagement #dw2pa-connections-layout
         #persona_connections_list img {
-        width: 104px !important;
-        height: 132px !important;
+        width: 98px !important;
+        height: 120px !important;
     }
 }
 
@@ -1251,9 +1260,9 @@ body.dw2pa-active #PersonaManagement #dw2pa-insert-settings:not(.dw2pa-insert-co
 body.dw2pa-active #PersonaManagement #dw2pa-connections-layout
     #persona_connections_list .avatar {
     box-sizing: border-box;
-    width: 126px !important;
-    height: 158px !important;
-    flex: 0 0 126px !important;
+    width: 106px !important;
+    height: 120px !important;
+    flex: 0 0 106px !important;
     margin: 0 !important;
     overflow: hidden;
     border-radius: 5px !important;
@@ -1268,9 +1277,9 @@ body.dw2pa-active #PersonaManagement #dw2pa-connections-layout
 @media (max-width: 380px) {
     body.dw2pa-active #PersonaManagement #dw2pa-connections-layout
         #persona_connections_list .avatar {
-        width: 104px !important;
-        height: 132px !important;
-        flex-basis: 104px !important;
+        width: 98px !important;
+        height: 120px !important;
+        flex-basis: 98px !important;
     }
     body.dw2pa-active #PersonaManagement #dw2pa-insert-settings
         > .flex-container > .extension_token_counter {
