@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&display=swap');
 
 /*
- * DW2 · Persona Atelier | v1.0.0
+ * DW2 · Persona Atelier | v1.0.1
  * Read-only visual layer for TT's native Persona Management.
  * This stylesheet does not target Character Gallery or Story Archive.
  *
@@ -735,5 +735,187 @@ body.dw2pa-active #PersonaManagement .persona_management_global_settings .range-
 @media (prefers-reduced-motion: reduce) {
     body.dw2pa-active #PersonaManagement #user_avatar_block.gridView > .avatar-container {
         transition: none !important;
+    }
+}
+
+
+/* v1.0.1 · Two independent disclosure controls, native-view restoration. */
+#PersonaManagement #dw2pa-mode-toggle {
+    display: inline-flex !important;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    min-height: 32px;
+    padding: 5px 6px !important;
+    margin: 0 0 0 8px !important;
+    border: 0 !important;
+    border-radius: 4px !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    color: rgba(230, 222, 218, .73) !important;
+    font: 500 9px/1.4 'Noto Serif SC', serif !important;
+    letter-spacing: .1em;
+    text-shadow: none !important;
+    white-space: nowrap;
+    cursor: pointer;
+}
+#PersonaManagement #dw2pa-mode-toggle:hover,
+#PersonaManagement #dw2pa-mode-toggle:focus-visible {
+    color: #f3ece7 !important;
+    outline: 1px dotted rgba(191, 217, 229, .45);
+}
+#PersonaManagement #dw2pa-mode-toggle[aria-pressed="true"] {
+    color: rgba(243, 236, 231, .92) !important;
+}
+body.dw2pa-active #PersonaManagement #dw2pa-tools-toggle {
+    order: 4 !important;
+    display: inline-flex !important;
+    flex: 0 0 auto !important;
+    align-items: center;
+    gap: 6px;
+    min-height: 34px;
+    padding: 5px 8px !important;
+    margin: 0 !important;
+    color: var(--dw2pa-subtle) !important;
+    background: transparent !important;
+    border: 1px solid var(--dw2pa-stroke) !important;
+    border-radius: 5px !important;
+    box-shadow: none !important;
+    font: 500 10px/1.45 var(--dw2pa-font) !important;
+    cursor: pointer;
+    white-space: nowrap;
+}
+body.dw2pa-active #PersonaManagement #dw2pa-tools-toggle::before {
+    content: '☷';
+    font: 600 14px/1 sans-serif;
+    color: var(--dw2pa-ice);
+}
+body.dw2pa-active #PersonaManagement #dw2pa-tools-toggle[aria-expanded="true"] {
+    color: var(--dw2pa-text) !important;
+    border-color: rgba(191, 217, 229, .36) !important;
+}
+body.dw2pa-active #PersonaManagement #dw2pa-tools-tray {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(82px, 1fr));
+    gap: 7px;
+    margin: 1px 0 12px;
+    padding: 10px;
+    border: 1px solid var(--dw2pa-stroke);
+    border-radius: 7px;
+    background: rgba(22, 27, 33, .24);
+}
+body.dw2pa-active #PersonaManagement #dw2pa-tools-tray[hidden] {
+    display: none !important;
+}
+body.dw2pa-active #PersonaManagement .dw2pa-tool-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    min-width: 0;
+    min-height: 33px;
+    border: 1px solid rgba(237, 228, 225, .11);
+    border-radius: 5px;
+    background: rgba(255,255,255,.025);
+}
+body.dw2pa-active #PersonaManagement .dw2pa-tool-item > :is(
+    .menu_button, #create_dummy_persona, #persona_grid_toggle
+) {
+    display: inline-flex !important;
+    flex: 0 1 auto !important;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    min-height: 30px !important;
+    height: auto !important;
+    width: auto !important;
+    max-width: 100%;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 5px 4px !important;
+    border: 0 !important;
+    border-radius: 4px !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    color: var(--dw2pa-subtle) !important;
+    font: 500 11px/1.4 var(--dw2pa-font) !important;
+    white-space: nowrap;
+}
+body.dw2pa-active #PersonaManagement .dw2pa-tool-item > .fa-solid {
+    font-family: 'Font Awesome 6 Free' !important;
+    font-weight: 900 !important;
+}
+body.dw2pa-active #PersonaManagement .dw2pa-tool-item > :is(
+    .menu_button, #create_dummy_persona, #persona_grid_toggle
+):hover {
+    color: var(--dw2pa-text) !important;
+}
+body.dw2pa-active #PersonaManagement .dw2pa-tool-caption {
+    color: var(--dw2pa-subtle);
+    font: 400 10px/1.4 var(--dw2pa-font);
+    white-space: nowrap;
+    pointer-events: none;
+}
+body.dw2pa-active #PersonaManagement #persona_controls {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    gap: 8px 8px !important;
+}
+body.dw2pa-active #PersonaManagement #persona_controls #dw2pa-actions-toggle {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto !important;
+    min-height: 30px;
+    padding: 5px 9px !important;
+    margin: 0 !important;
+    border: 1px solid var(--dw2pa-stroke) !important;
+    border-radius: 5px !important;
+    background: transparent !important;
+    color: var(--dw2pa-subtle) !important;
+    box-shadow: none !important;
+    font: 500 10px/1.4 var(--dw2pa-font) !important;
+    white-space: nowrap;
+    cursor: pointer;
+}
+body.dw2pa-active #PersonaManagement #persona_controls #dw2pa-actions-toggle::after {
+    content: '⌄';
+    margin-left: 5px;
+    font: 12px/1 sans-serif;
+}
+body.dw2pa-active #PersonaManagement #persona_controls #dw2pa-actions-toggle[aria-expanded="true"] {
+    color: var(--dw2pa-text) !important;
+    border-color: rgba(191, 217, 229, .34) !important;
+}
+body.dw2pa-active #PersonaManagement #persona_controls #dw2pa-actions-toggle[aria-expanded="true"]::after {
+    transform: rotate(180deg);
+}
+body.dw2pa-active #PersonaManagement #persona_controls .persona_controls_buttons_block {
+    flex: 1 0 100% !important;
+    justify-content: flex-start;
+    padding: 4px 0 2px;
+}
+body.dw2pa-active #PersonaManagement #persona_controls.dw2pa-actions-collapsed .persona_controls_buttons_block {
+    display: none !important;
+}
+body.dw2pa-active #PersonaManagement #persona_controls > label[for="persona-management-dropdown"] {
+    flex: 1 0 100% !important;
+    margin: 0 !important;
+}
+/* Never force-show TT's non-active chat/character lock markers. */
+body.dw2pa-active #PersonaManagement #user_avatar_block.gridView >
+    .avatar-container:not(.locked_to_chat) .locked_to_chat_label,
+body.dw2pa-active #PersonaManagement #user_avatar_block.gridView >
+    .avatar-container:not(.locked_to_character) .locked_to_character_label {
+    display: none !important;
+}
+@media (max-width: 380px) {
+    #PersonaManagement #dw2pa-mode-toggle {
+        letter-spacing: .02em;
+        font-size: 8px !important;
+    }
+    body.dw2pa-active #PersonaManagement #dw2pa-tools-tray {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }

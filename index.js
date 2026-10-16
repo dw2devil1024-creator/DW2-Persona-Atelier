@@ -1,9 +1,9 @@
 /*
- * DW2 · Persona Atelier | v1.0.0
+ * DW2 · Persona Atelier | v1.0.1
  * A presentation layer for TT's native Persona Management.
  * Keep every TT persona node, event handler, filter and save routine intact.
  */
-const VERSION = '1.0.0';
+const VERSION = '1.0.1';
 const STYLE_CLASS = 'dw2pa-active';
 const SETTINGS_ID = 'dw2pa-settings';
 const SETTINGS_TOGGLE_ID = 'dw2pa-settings-toggle';
@@ -25,12 +25,171 @@ function writePreference(enabled) {
 function isStyled() {
     return Boolean(document.body?.classList.contains(STYLE_CLASS));
 }
+/* View switch remains visible in native mode so it can always be reversed. */
+const MODE_TOGGLE_ID = 'dw2pa-mode-toggle';
+const TOOLS_TOGGLE_ID = 'dw2pa-tools-toggle';
+const TOOLS_TRAY_ID = 'dw2pa-tools-tray';
+const ACTIONS_TOGGLE_ID = 'dw2pa-actions-toggle';
+const ACTIONS_CONTENT_ID = 'dw2pa-persona-actions';
+const TOOL_OPEN_KEY = 'dw2pa:tools:open:v1';
+const ACTION_OPEN_KEY = 'dw2pa:actions:open:v1';
+let movedTools = [];
+let namedNativeButtons = false;
+
+function getOpen(key) {
+    try { return localStorage.getItem(key) === '1'; }
+    catch { return false; }
+}
+function saveOpen(key, value) {
+    try { localStorage.setItem(key, value ? '1' : '0'); }
+    catch { /* UI still responds in this session. */ }
+}
 function syncToggle() {
     const checkbox = document.getElementById(SETTINGS_TOGGLE_ID);
     if (checkbox) checkbox.checked = isStyled();
+    const toggle = document.getElementById(MODE_TOGGLE_ID);
+    if (toggle) {
+        toggle.setAttribute('aria-pressed', String(isStyled()));
+        toggle.textContent = isStyled() ? 'ATELIER VIEW' : 'NATIVE VIEW';
+        toggle.title = isStyled() ? '返回 TT 原生人设外观' : '切换到 DW2 人设工坊';
+    }
+}
+function mountModeToggle() {
+    const title = document.querySelector('#PersonaManagement > .flex-container > .flex-container:first-child h3');
+    if (!title) return false;
+    if (document.getElementById(MODE_TOGGLE_ID)) return true;
+    const toggle = document.createElement('button');
+    toggle.id = MODE_TOGGLE_ID;
+    toggle.type = 'button';
+    toggle.addEventListener('click', () => {
+        const enabled = !isStyled();
+        writePreference(enabled);
+        applyStyle(enabled);
+    });
+    title.after(toggle);
+    syncToggle();
+    return true;
+}
+function openToolTray(open) {
+    const toggle = document.getElementById(TOOLS_TOGGLE_ID);
+    const tray = document.getElementById(TOOLS_TRAY_ID);
+    if (!toggle || !tray) return;
+    toggle.setAttribute('aria-expanded', String(open));
+    tray.hidden = !open;
+    toggle.classList.toggle('dw2pa-is-expanded', open);
+}
+function mountToolTray() {
+    if (document.getElementById(TOOLS_TRAY_ID)) return true;
+    const panel = document.getElementById('PersonaManagement');
+    const row = panel?.querySelector('.persona_management_left_column > .flex-container:first-child');
+    const tools = [
+        panel?.querySelector('.user_stats_button'),
+        document.getElementById('personas_backup'),
+        document.getElementById('personas_restore'),
+        document.getElementById('create_dummy_persona'),
+        document.getElementById('persona_grid_toggle'),
+    ];
+    if (!row || tools.some(node => !node)) return false;
+
+    const toggle = document.createElement('button');
+    toggle.id = TOOLS_TOGGLE_ID;
+    toggle.type = 'button';
+    toggle.textContent = '工具与管理';
+    toggle.setAttribute('aria-controls', TOOLS_TRAY_ID);
+    toggle.addEventListener('click', () => {
+        const next = toggle.getAttribute('aria-expanded') !== 'true';
+        saveOpen(TOOL_OPEN_KEY, next);
+        openToolTray(next);
+    });
+
+    const tray = document.createElement('div');
+    tray.id = TOOLS_TRAY_ID;
+    tray.setAttribute('aria-label', '人设管理原生工具');
+    row.append(toggle);
+    row.after(tray);
+
+    const labels = ['使用统计', '备份', '恢复', '创建', '排列视图'];
+    for (let index = 0; index < tools.length; index++) {
+        const node = tools[index];
+        // A placeholder records the exact native location, preserving order
+        // and TT's original event handlers when returning to native view.
+        const anchor = document.createComment('dw2pa original tool position');
+        node.before(anchor);
+        movedTools.push({ node, anchor, parent: anchor.parentNode });
+        const item = document.createElement('div');
+        item.className = 'dw2pa-tool-item';
+        item.append(node);
+        // Grid view's native icon has no visible label.
+        if (index === 4) {
+            const caption = document.createElement('span');
+            caption.className = 'dw2pa-tool-caption';
+            caption.textContent = labels[index];
+            item.append(caption);
+        }
+        tray.append(item);
+    }
+    openToolTray(getOpen(TOOL_OPEN_KEY));
+    return true;
+}
+function restoreToolTray() {
+    for (const { node, anchor, parent } of movedTools) {
+        if (anchor.parentNode) anchor.replaceWith(node);
+        else if (parent?.isConnected) parent.append(node);
+    }
+    movedTools = [];
+    document.getElementById(TOOLS_TOGGLE_ID)?.remove();
+    document.getElementById(TOOLS_TRAY_ID)?.remove();
+}
+function openPersonaActions(open) {
+    const controls = document.getElementById('persona_controls');
+    const toggle = document.getElementById(ACTIONS_TOGGLE_ID);
+    if (!controls || !toggle) return;
+    controls.classList.toggle('dw2pa-actions-collapsed', !open);
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.textContent = open ? '收起操作' : '人设操作';
+}
+function mountPersonaActions() {
+    if (document.getElementById(ACTIONS_TOGGLE_ID)) return true;
+    const controls = document.getElementById('persona_controls');
+    const name = document.getElementById('your_name');
+    const nativeButtons = controls?.querySelector('.persona_controls_buttons_block');
+    if (!controls || !name || !nativeButtons) return false;
+
+    if (!nativeButtons.id) {
+        nativeButtons.id = ACTIONS_CONTENT_ID;
+        namedNativeButtons = true;
+    }
+    const toggle = document.createElement('button');
+    toggle.id = ACTIONS_TOGGLE_ID;
+    toggle.type = 'button';
+    toggle.setAttribute('aria-controls', nativeButtons.id);
+    toggle.addEventListener('click', () => {
+        const next = toggle.getAttribute('aria-expanded') !== 'true';
+        saveOpen(ACTION_OPEN_KEY, next);
+        openPersonaActions(next);
+    });
+    name.after(toggle);
+    openPersonaActions(getOpen(ACTION_OPEN_KEY));
+    return true;
+}
+function restorePersonaActions() {
+    document.getElementById('persona_controls')?.classList.remove('dw2pa-actions-collapsed');
+    document.getElementById(ACTIONS_TOGGLE_ID)?.remove();
+    if (namedNativeButtons) {
+        document.getElementById(ACTIONS_CONTENT_ID)?.removeAttribute('id');
+        namedNativeButtons = false;
+    }
 }
 function applyStyle(enabled) {
-    document.body?.classList.toggle(STYLE_CLASS, Boolean(running && enabled));
+    const active = Boolean(running && enabled);
+    if (active) {
+        mountToolTray();
+        mountPersonaActions();
+    } else {
+        restoreToolTray();
+        restorePersonaActions();
+    }
+    document.body?.classList.toggle(STYLE_CLASS, active);
     syncToggle();
 }
 
@@ -243,8 +402,11 @@ function mountSettings() {
 
 function mountWhenReady() {
     if (!running) return;
-    applyStyle(readPreference());
-    const ready = Boolean(document.getElementById('PersonaManagement')) && mountSettings();
+    const panelFound = Boolean(document.getElementById('PersonaManagement'));
+    const headerFound = panelFound && mountModeToggle();
+    const settingsFound = mountSettings();
+    if (panelFound) applyStyle(readPreference());
+    const ready = panelFound && headerFound && settingsFound;
     if (ready && startupObserver) {
         startupObserver.disconnect();
         startupObserver = null;
@@ -268,7 +430,8 @@ export function onDisable() {
     running = false;
     startupObserver?.disconnect();
     startupObserver = null;
-    document.body?.classList.remove(STYLE_CLASS);
+    applyStyle(false);
+    document.getElementById(MODE_TOGGLE_ID)?.remove();
     document.getElementById(SETTINGS_ID)?.remove();
 }
 
