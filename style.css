@@ -1,7 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&display=swap');
+/* Avoid external font loading during TT startup. Reuse the theme's font or system serif fallback. */
 
 /*
- * DW2 · Persona Atelier | v1.0.5
+ * DW2 · Persona Atelier | v1.0.6
  * Read-only visual layer for TT's native Persona Management.
  * This stylesheet does not target Character Gallery or Story Archive.
  *
@@ -479,6 +479,17 @@ body.dw2pa-active #PersonaManagement .persona_management_global_settings > h4.st
     color: var(--dw2pa-subtle) !important;
     font: 500 10px/1.5 var(--dw2pa-font) !important;
     letter-spacing: .08em;
+}
+/* Unlike the whole editing section, THIS is the little framed "Current
+   Persona" heading. Override TT's native .standoutHeader gradient and rim. */
+body.dw2pa-active #PersonaManagement .persona_management_current_persona > h4.standoutHeader {
+    padding: 0 0 8px !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    background-image: none !important;
+    outline: none !important;
+    box-shadow: none !important;
 }
 body.dw2pa-active #PersonaManagement .persona_management_current_persona > h4:not(.standoutHeader) {
     margin: 17px 0 8px !important;

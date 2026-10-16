@@ -3,14 +3,14 @@
  * A presentation layer for TT's native Persona Management.
  * Keep every TT persona node, event handler, filter and save routine intact.
  */
-const VERSION = '1.0.5';
+const VERSION = '1.0.6';
 const STYLE_CLASS = 'dw2pa-active';
 const SETTINGS_ID = 'dw2pa-settings';
 const SETTINGS_TOGGLE_ID = 'dw2pa-settings-toggle';
 const STORAGE_KEY = 'dw2pa:enabled:v1';
 
 let running = false;
-let startupObserver = null;
+let panelObserver = null;
 let checkedUpdate = null;
 let updateBusy = false;
 
@@ -546,36 +546,48 @@ function mountSettings() {
     return true;
 }
 
+/* Startup is intentionally lightweight. The native TT persona drawer starts
+   closed, so there is no reason to reparent its controls or build panels on
+   every launch while Story Archive is preparing the home screen.
+   Watch the drawer's class only, never the whole document's subtree. */
+function initializeVisiblePersona() {
+    if (!running) return;
+    const panel = document.getElementById('PersonaManagement');
+    if (!panel || panel.classList.contains('closedDrawer')) return;
+    // Only initialize once. Switching views is handled by the user's buttons.
+    if (!document.getElementById(MODE_TOGGLE_ID)) {
+        mountModeToggle();
+        applyStyle(readPreference());
+    }
+}
 function mountWhenReady() {
     if (!running) return;
-    const panelFound = Boolean(document.getElementById('PersonaManagement'));
-    const headerFound = panelFound && mountModeToggle();
-    const settingsFound = mountSettings();
-    if (panelFound) applyStyle(readPreference());
-    const ready = panelFound && headerFound && settingsFound;
-    if (ready && startupObserver) {
-        startupObserver.disconnect();
-        startupObserver = null;
+    // A class change is cheap; the CSS is entirely scoped to PersonaManagement.
+    document.body?.classList.toggle(STYLE_CLASS, readPreference());
+    mountSettings();
+    syncToggle();
+    const panel = document.getElementById('PersonaManagement');
+    if (panel && !panelObserver) {
+        panelObserver = new MutationObserver(initializeVisiblePersona);
+        panelObserver.observe(panel, { attributes: true, attributeFilter: ['class'] });
     }
+    initializeVisiblePersona();
 }
 
 export function onEnable() {
     if (running) return;
     running = true;
-    mountWhenReady();
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', mountWhenReady, { once: true });
-    }
-    if (document.documentElement && (!document.getElementById('PersonaManagement') || !document.getElementById(SETTINGS_ID))) {
-        startupObserver = new MutationObserver(mountWhenReady);
-        startupObserver.observe(document.documentElement, { childList: true, subtree: true });
+    } else {
+        mountWhenReady();
     }
 }
 
 export function onDisable() {
     running = false;
-    startupObserver?.disconnect();
-    startupObserver = null;
+    panelObserver?.disconnect();
+    panelObserver = null;
     applyStyle(false);
     document.getElementById(MODE_TOGGLE_ID)?.remove();
     document.getElementById(SETTINGS_ID)?.remove();
