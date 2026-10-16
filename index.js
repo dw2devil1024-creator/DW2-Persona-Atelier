@@ -1,9 +1,9 @@
 /*
- * DW2 · Persona Atelier | v1.0.2
+ * DW2 · Persona Atelier | v1.0.3
  * A presentation layer for TT's native Persona Management.
  * Keep every TT persona node, event handler, filter and save routine intact.
  */
-const VERSION = '1.0.2';
+const VERSION = '1.0.3';
 const STYLE_CLASS = 'dw2pa-active';
 const SETTINGS_ID = 'dw2pa-settings';
 const SETTINGS_TOGGLE_ID = 'dw2pa-settings-toggle';
@@ -35,6 +35,8 @@ const TOOL_OPEN_KEY = 'dw2pa:tools:open:v1';
 const ACTION_OPEN_KEY = 'dw2pa:actions:open:v1';
 const GLOBAL_OPEN_KEY = 'dw2pa:global:open:v1';
 const GLOBAL_TOGGLE_ID = 'dw2pa-global-toggle';
+const CONNECTION_LAYOUT_ID = 'dw2pa-connections-layout';
+let movedConnections = [];
 let movedTools = [];
 let namedNativeButtons = false;
 
@@ -194,6 +196,35 @@ function restorePersonaActions() {
         namedNativeButtons = false;
     }
 }
+/* Group the original TT binding controls around a left-hand avatar preview.
+   Moving the actual DOM nodes preserves event listeners, data and rerender IDs.
+   The comment anchors allow exact native restoration on view switch/disable. */
+function mountConnectionLayout() {
+    if (document.getElementById(CONNECTION_LAYOUT_ID)) return true;
+    const buttons = document.getElementById('persona_connections_buttons');
+    const info = document.getElementById('persona_connections_info_block');
+    const avatars = document.getElementById('persona_connections_list');
+    const root = buttons?.parentNode;
+    if (!root || !info || !avatars || info.parentNode !== root || avatars.parentNode !== root) return false;
+    const layout = document.createElement('div');
+    layout.id = CONNECTION_LAYOUT_ID;
+    buttons.before(layout);
+    for (const node of [avatars, buttons, info]) {
+        const anchor = document.createComment('dw2pa original connection position');
+        node.before(anchor);
+        movedConnections.push({ node, anchor, parent: anchor.parentNode });
+        layout.append(node);
+    }
+    return true;
+}
+function restoreConnectionLayout() {
+    for (const { node, anchor, parent } of movedConnections) {
+        if (anchor.parentNode) anchor.replaceWith(node);
+        else if (parent?.isConnected) parent.append(node);
+    }
+    movedConnections = [];
+    document.getElementById(CONNECTION_LAYOUT_ID)?.remove();
+}
 function openGlobalSettings(open) {
     const section = document.querySelector('#PersonaManagement .persona_management_global_settings');
     const toggle = document.getElementById(GLOBAL_TOGGLE_ID);
@@ -231,10 +262,12 @@ function applyStyle(enabled) {
         mountToolTray();
         mountPersonaActions();
         mountGlobalSettings();
+        mountConnectionLayout();
     } else {
         restoreToolTray();
         restorePersonaActions();
         restoreGlobalSettings();
+        restoreConnectionLayout();
     }
     document.body?.classList.toggle(STYLE_CLASS, active);
     syncToggle();

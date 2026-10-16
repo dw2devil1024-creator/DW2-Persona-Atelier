@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&display=swap');
 
 /*
- * DW2 · Persona Atelier | v1.0.2
+ * DW2 · Persona Atelier | v1.0.3
  * Read-only visual layer for TT's native Persona Management.
  * This stylesheet does not target Character Gallery or Story Archive.
  *
@@ -550,7 +550,9 @@ body.dw2pa-active #PersonaManagement #persona-management-dropdown {
 body.dw2pa-active #PersonaManagement #persona_description {
     display: block;
     width: 100% !important;
-    min-height: 215px;
+    height: 310px !important;
+    min-height: 310px !important;
+    max-height: none !important;
     padding: 13px 12px !important;
     margin: 0 !important;
     resize: vertical;
@@ -978,6 +980,12 @@ body.dw2pa-active #PersonaManagement .persona_management_global_settings > h4.st
     justify-content: space-between;
     gap: 10px;
     margin-bottom: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: none !important;
+    background-image: none !important;
+    box-shadow: none !important;
 }
 body.dw2pa-active #PersonaManagement .persona_management_global_settings
     > h4.standoutHeader #dw2pa-global-toggle {
@@ -998,15 +1006,172 @@ body.dw2pa-active #PersonaManagement .persona_management_global_settings
 }
 body.dw2pa-active #PersonaManagement .persona_management_global_settings
     > h4.standoutHeader #dw2pa-global-toggle::after {
-    content: '⌄';
-    margin-left: 6px;
-    font: 13px/1 sans-serif;
-}
-body.dw2pa-active #PersonaManagement .persona_management_global_settings
-    > h4.standoutHeader #dw2pa-global-toggle[aria-expanded="true"]::after {
-    transform: rotate(180deg);
+    content: none !important;
 }
 body.dw2pa-active #PersonaManagement .persona_management_global_settings.dw2pa-global-collapsed
     > :not(h4.standoutHeader) {
     display: none !important;
+}
+
+
+/* v1.0.3 · Unified tool illustrations and restrained document controls. */
+body.dw2pa-active #PersonaManagement #dw2pa-tools-tray .dw2pa-tool-item {
+    gap: 4px !important;
+    justify-content: center;
+    min-height: 56px;
+}
+body.dw2pa-active #PersonaManagement #dw2pa-tools-tray .dw2pa-tool-item > :is(
+    .menu_button, #create_dummy_persona, #persona_grid_toggle
+) {
+    order: 0 !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 5px !important;
+    font: 500 10px/1.4 var(--dw2pa-font) !important;
+    text-align: center;
+    letter-spacing: 0 !important;
+}
+body.dw2pa-active #PersonaManagement #dw2pa-tools-tray .dw2pa-tool-item
+    > :is(.menu_button, #create_dummy_persona) :is(i.fa-solid, .fa-solid) {
+    display: block !important;
+    height: 16px;
+    margin: 0 !important;
+    color: var(--dw2pa-subtle) !important;
+    font-family: 'Font Awesome 6 Free' !important;
+    font-weight: 900 !important;
+    font-size: 15px !important;
+    line-height: 16px !important;
+}
+body.dw2pa-active #PersonaManagement #dw2pa-tools-tray .dw2pa-tool-item
+    > :is(.menu_button, #create_dummy_persona) :is(span, div:not(.menu_button)) {
+    font: 500 10px/1.4 var(--dw2pa-font) !important;
+    white-space: nowrap;
+    letter-spacing: 0;
+}
+body.dw2pa-active #PersonaManagement #dw2pa-tools-tray
+    .dw2pa-tool-item > #persona_grid_toggle {
+    order: -1 !important;  /* TT assigns the grid icon its own order otherwise */
+    flex: 0 0 16px !important;
+    display: block !important;
+    height: 16px !important;
+    min-height: 16px !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font: 900 15px/16px 'Font Awesome 6 Free' !important;
+}
+body.dw2pa-active #PersonaManagement #dw2pa-tools-tray .dw2pa-tool-item
+    .dw2pa-tool-caption {
+    order: 1 !important;
+    font: 500 10px/1.4 var(--dw2pa-font) !important;
+    letter-spacing: 0;
+}
+
+/* More… remains the ORIGINAL TT lorebook select. It follows the six action
+   icons inside the one action drawer, without losing native change handlers. */
+body.dw2pa-active #PersonaManagement #persona_controls.dw2pa-actions-collapsed
+    > label[for="persona-management-dropdown"] {
+    display: none !important;
+}
+body.dw2pa-active #PersonaManagement #persona_controls:not(.dw2pa-actions-collapsed)
+    > label[for="persona-management-dropdown"] {
+    display: block !important;
+    flex: 1 0 100% !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 2px 0 5px !important;
+}
+
+/* Connection workbench: the original TT linked avatar(s) at left,
+   original default/character/chat controls in a vertical stack at right. */
+body.dw2pa-active #PersonaManagement #dw2pa-connections-layout {
+    display: grid !important;
+    grid-template-columns: minmax(84px, 112px) minmax(0, 1fr);
+    grid-template-areas:
+        'avatars controls'
+        'status status';
+    column-gap: 12px;
+    row-gap: 10px;
+    align-items: start;
+    margin: 3px 0 5px;
+    padding: 9px 0;
+    min-width: 0;
+}
+body.dw2pa-active #PersonaManagement #dw2pa-connections-layout #persona_connections_list {
+    grid-area: avatars;
+    display: flex !important;
+    flex-flow: row wrap !important;
+    align-content: start;
+    justify-content: flex-start;
+    min-width: 0 !important;
+    max-width: 112px;
+    min-height: 86px;
+    margin: 0 !important;
+    padding: 0 !important;
+    gap: 5px;
+    overflow-wrap: anywhere;
+    font: 10px/1.55 var(--dw2pa-font);
+}
+body.dw2pa-active #PersonaManagement #dw2pa-connections-layout #persona_connections_list
+    :is(.avatar, .avatar_div, img) {
+    max-width: 100% !important;
+    border-radius: 5px;
+}
+body.dw2pa-active #PersonaManagement #dw2pa-connections-layout #persona_connections_list img {
+    width: 96px !important;
+    height: 122px !important;
+    object-fit: cover !important;
+    object-position: center;
+}
+body.dw2pa-active #PersonaManagement #dw2pa-connections-layout #persona_connections_buttons {
+    grid-area: controls;
+    display: flex !important;
+    flex-direction: column !important;
+    flex-wrap: nowrap !important;
+    align-items: stretch !important;
+    gap: 7px !important;
+    min-width: 0;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+body.dw2pa-active #PersonaManagement #dw2pa-connections-layout
+    #persona_connections_buttons > .menu_button {
+    width: 100% !important;
+    min-width: 0;
+    min-height: 36px;
+    justify-content: center;
+    gap: 8px !important;
+    text-align: center;
+    margin: 0 !important;
+    padding: 7px 8px !important;
+    font: 500 11px/1.45 var(--dw2pa-font) !important;
+}
+body.dw2pa-active #PersonaManagement #dw2pa-connections-layout
+    #persona_connections_buttons > .menu_button .icon {
+    flex: 0 0 auto;
+    font-family: 'Font Awesome 6 Free' !important;
+    font-size: 12px !important;
+}
+body.dw2pa-active #PersonaManagement #dw2pa-connections-layout #persona_connections_info_block {
+    grid-area: status;
+    min-width: 0;
+    width: 100%;
+    margin: 0 !important;
+}
+body.dw2pa-active #PersonaManagement #dw2pa-connections-layout
+    #persona_connections_info_block:empty {
+    display: none !important;
+}
+@media (max-width: 380px) {
+    body.dw2pa-active #PersonaManagement #dw2pa-connections-layout {
+        grid-template-columns: minmax(72px, 98px) minmax(0, 1fr);
+        column-gap: 9px;
+    }
+    body.dw2pa-active #PersonaManagement #dw2pa-connections-layout
+        #persona_connections_list img {
+        width: 86px !important;
+        height: 110px !important;
+    }
 }
